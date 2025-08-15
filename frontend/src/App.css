@@ -1,0 +1,112 @@
+/* Basic reset + body */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f6fa;
+  color: #222;
+}
+
+/* Top nav */
+.navbar {
+  background: #222;
+  color: #fff;
+  padding: 10px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+.navbar a:hover {
+  background: #333;
+}
+.navbar .spacer {
+  flex: 1;
+}
+
+/* Page wrapper */
+.container {
+  max-width: 1000px;
+  margin: 18px auto;
+  padding: 0 16px;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.05);
+  margin-bottom: 16px;
+}
+
+/* Titles */
+h1, h2 { margin: 0 0 10px; }
+.subtitle { color: #6b7280; margin: -6px 0 12px; }
+
+/* Forms */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.form-grid .full { grid-column: 1 / -1; }
+
+label { display: block; font-size: 13px; color: #555; margin-bottom: 6px; }
+input, select, textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,.15);
+}
+
+/* Buttons */
+.btn {
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.btn:hover { background: #374151; }
+.btn.secondary { background: #fff; color:#111827; border:1px solid #d1d5db; }
+.btn.secondary:hover { background:#f9fafb; }
+.btn.success { background: #16a34a; }
+.btn.danger { background: #dc2626; }
+
+/* Table */
+.table-wrap { overflow: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th, td {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+}
+thead th {
+  background: #f3f4f6;
+}
+
+/* Utility */
+.row { display: flex; gap: 8px; align-items: center; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
