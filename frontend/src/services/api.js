@@ -1,7 +1,7 @@
 // frontend/src/services/api.js
 import axios from 'axios';
 
-const API = axios.create({ baseURL: process.env.REACT_APP_API_URL });
+const API = axios.create({ baseURL: '/api' });
 
 // Attach token from localStorage for protected routes
 API.interceptors.request.use((req) => {
