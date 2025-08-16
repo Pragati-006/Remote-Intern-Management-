@@ -12,12 +12,13 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-/** ========= AUTH ========= */
-export const login = (email, password) =>
-  API.post('/users/login', { email, password });
+export default API;
 
-export const register = (name, email, password, role = 'manager') =>
-  API.post('/users/register', { name, email, password, role });
+/** ========= AUTH ========= */
+export const login = (email, password) => API.post('/users/login', { email, password });
+
+export const register = (name, email, password, role = 'manager') => API.post('/users/register', { name, email, password, role });
+
 
 /** ========= INTERNS ========= */
 export const fetchInterns = () => API.get('/interns');
@@ -44,4 +45,4 @@ export const fetchPerformanceReport = (internId) =>
   API.get(`/evaluations/report?internId=${internId}`);
 export const deleteEvaluation = (id) => API.delete(`/evaluations/${id}`);
 
-export default API;
+
