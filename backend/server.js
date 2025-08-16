@@ -10,7 +10,7 @@ const internRoutes = require('./routes/Intern');
 const taskRoutes = require('./routes/Task');
 const attendanceRoutes = require('./routes/Attendance');
 const evaluationRoutes = require('./routes/Evaluation');
-let userRoutes; try { userRoutes = require('./routes/User'); } catch { userRoutes = null; }
+const userRoutes = require('./routes/User');
 
 const app = express();
 app.use(cors());
