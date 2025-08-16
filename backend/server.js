@@ -10,7 +10,7 @@ const internRoutes = require('./routes/Intern');
 const taskRoutes = require('./routes/Task');
 const attendanceRoutes = require('./routes/Attendance');
 const evaluationRoutes = require('./routes/Evaluation');
-const userRoutes = require('./routes/User');
+let userRoutes; try { userRoutes = require('./routes/User'); } catch { userRoutes = null; }
 
 const app = express();
 app.use(cors());
@@ -20,15 +20,16 @@ app.use(express.json());
 app.get('/api/health', (_req, res) => res.status(200).json({ ok: true, message: 'Server is running' }));
 
 // API routes
+if (userRoutes) app.use('/api/users', userRoutes);
 app.use('/api/interns', internRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/evaluations', evaluationRoutes);
-app.use('/api/users', userRoutes);
+
 // Serve frontend (only if you want Node to serve it; for Nginx you can skip this)
 if (process.env.NODE_ENV === 'production') {
   // Prefer serving the React *build* folder
-  const buildPath = path.join(__dirname, '../frontend/build');
+  const buildPath = path.join(__dirname, '../frontend/public');
   app.use(express.static(buildPath));
 
   // SPA fallback — keep this AFTER API routes so it doesn’t swallow them
