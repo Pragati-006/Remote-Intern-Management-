@@ -5,10 +5,10 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-const internRoutes = require('./routes/intern');
-const taskRoutes = require('./routes/task');
-const attendanceRoutes = require('./routes/attendance');
-const evaluationRoutes = require('./routes/evaluation');
+const internRoutes = require('./routes/Intern');
+const taskRoutes = require('./routes/Task');
+const attendanceRoutes = require('./routes/Attendance');
+const evaluationRoutes = require('./routes/Evaluation');
 const userRoutes = require('./routes/User');
 
 
