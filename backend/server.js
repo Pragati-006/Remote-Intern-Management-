@@ -19,6 +19,8 @@ app.use(cors());
 app.use(express.json());
 
 connectDB();
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // Health check (useful for PM2/ELB checks)
 app.get('/api/health', (_req, res) => res.status(200).json({ ok: true, message: 'Server is running' }));
@@ -30,5 +32,3 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/evaluations', evaluationRoutes);
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
