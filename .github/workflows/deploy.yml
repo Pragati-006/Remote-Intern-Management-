@@ -1,0 +1,110 @@
+name: CI/CD - RIM
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          JWT_SECRET: dummy_for_tests
+
+  build_frontend:
+    name: Build frontend
+    needs: test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Create production env
+        run: |
+          echo "REACT_APP_API_URL=/api" > .env.production
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/build
+
+  deploy:
+    name: Deploy to EC2
+    needs: build_frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: build
+
+      - name: Copy frontend build to EC2 (/var/www/rim-frontend)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "build/*"
+          target: "/var/www/rim-frontend"
+          strip_components: 1
+          overwrite: true
+
+      - name: SSH to EC2 - pull backend & restart PM2
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            cd ~/Remote-Intern-Management-/backend
+            # Pull latest code (repo must be already cloned on the EC2)
+            git pull origin main || true
+            # Install production deps
+            npm ci --omit=dev
+            # Ensure .env exists with real MONGO_URI / JWT_SECRET / PORT=5001
+            if [ ! -f .env ]; then
+              echo "WARNING: .env missing on EC2. Create it with your real secrets."
+            fi
+            # Restart or start PM2
+            pm2 restart server || pm2 start server.js --name server
+            pm2 save
+
+      - name: Health check via Nginx
+        run: |
+          curl -fsS "http://${{ secrets.EC2_HOST }}/api/health" || exit 1
